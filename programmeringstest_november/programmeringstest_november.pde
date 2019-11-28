@@ -7,11 +7,22 @@ int targetMaxRadius = 150;
 
 int hitRadius = 7;
 
+// Vars for fire animation
 int fireTiming = 0;
 boolean showFire = false;
 
-float[][] hits = new float[100][2];
+// Array to hold x and y for each hit. Max count of hits is 200
+float[][] hits = new float[200][2];
 int countHits = 0;
+
+// Colors for target
+color white = color(255, 255, 255);
+color black = color(0, 0, 0);
+color blue = color(0, 201, 243);
+color red = color(255, 52, 35);
+color yellow = color(253, 229, 123);
+
+color[] targetColors = {white, black, blue, red, yellow, red};
 
 
 void setup() {
@@ -30,22 +41,18 @@ void draw() {
   image(gun, 155, 400, 310, 200); 
   
   // Draw target
-  fill(255, 255, 255);
-  circle(targetX, targetY, 300);
-  fill(0, 0, 0);
-  circle(targetX, targetY, 250);
-  fill(0, 201, 243);
-  circle(targetX, targetY, 200);
-  fill(255, 52, 35);
-  circle(targetX, targetY, 150);
-  fill(253, 229, 123);
-  circle(targetX, targetY, 100);
+  for (int i=0; i<5; i++) {
+    fill(targetColors[i]);
+    circle(targetX, targetY, targetMaxRadius*2 - i*50);
+  }
+  // The last center point is irregular, so this one is created outside the loop
   fill(255, 52, 35);
   circle(targetX, targetY, 20);
   
+  // Show fire image
   if (showFire) {
     imageMode(CORNER);
-    image(gunfire, 290, 240, 300, 200);
+    image(gunfire, 285, 235, 300, 200);
     
     if (millis() - fireTiming > 150) {showFire=false;}
   }
@@ -74,6 +81,7 @@ void shoot() {
     insideTarget = sqrt(pow(hitX-targetX, 2) + pow(hitY-targetY, 2)) < targetMaxRadius; 
   }
   
+  // Add coordinates to array and add one to counter
   hits[countHits][0] = hitX;
   hits[countHits][1] = hitY;
   countHits++;
