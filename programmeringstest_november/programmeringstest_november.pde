@@ -1,5 +1,5 @@
 PImage gun;
-float firearmScale = .2;
+PImage gunfire;
 
 int targetX = 1000;
 int targetY = 400;
@@ -7,13 +7,27 @@ int targetMaxRadius = 150;
 
 int hitRadius = 7;
 
+int fireTiming = 0;
+boolean showFire = false;
+
+float[][] hits = new float[100][2];
+int countHits = 0;
+
 
 void setup() {
   size(1200, 800);
   gun = loadImage("gun.png");
+  gunfire = loadImage("gunfire.png");
+}
+
+
+void draw() {
+  clear();
+  background(226, 225, 221);
   
   // Insert image of gun
-  image(gun, 0, 300, width*firearmScale, height*firearmScale); 
+  imageMode(CENTER);
+  image(gun, 155, 400, 310, 200); 
   
   // Draw target
   fill(255, 255, 255);
@@ -28,11 +42,19 @@ void setup() {
   circle(targetX, targetY, 100);
   fill(255, 52, 35);
   circle(targetX, targetY, 20);
-}
-
-
-void draw() {
   
+  if (showFire) {
+    imageMode(CORNER);
+    image(gunfire, 290, 240, 300, 200);
+    
+    if (millis() - fireTiming > 150) {showFire=false;}
+  }
+  
+  // Create each hit
+  for (int i=0; i<countHits; i++) {
+    fill(204, 153, 0);
+    circle(hits[i][0], hits[i][1], hitRadius*2);
+  }
 }
 
 
@@ -52,9 +74,13 @@ void shoot() {
     insideTarget = sqrt(pow(hitX-targetX, 2) + pow(hitY-targetY, 2)) < targetMaxRadius; 
   }
   
-  // Draw hit
-  fill(204, 153, 0);
-  circle(hitX, hitY, hitRadius*2);
+  hits[countHits][0] = hitX;
+  hits[countHits][1] = hitY;
+  countHits++;
+  
+  // Show fire animation
+  fireTiming = millis();
+  showFire = true;
 }
 
 
