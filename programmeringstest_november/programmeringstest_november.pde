@@ -7,6 +7,9 @@ int targetMaxRadius = 150;
 
 int hitRadius = 7;
 
+int score = 0;
+int[] points = {50, 30, 20, 10, 5}; 
+
 // Vars for fire animation
 int fireTiming = 0;
 boolean showFire = false;
@@ -35,6 +38,10 @@ void setup() {
 void draw() {
   clear();
   background(226, 225, 221);
+  
+  textAlign(CENTER);
+  textSize(30);
+  text("Din score: " + score, 150, 40);
   
   // Insert image of gun
   imageMode(CENTER);
@@ -69,6 +76,7 @@ void shoot() {
   boolean insideTarget = false;
   float hitX = 0;
   float hitY = 0;
+  float distanceToCenter = 0;
   
   // Generate new coordinates until the point is inside the circle
   while (!insideTarget) {
@@ -78,7 +86,8 @@ void shoot() {
     hitY = targetY + random(targetMaxRadius * (-1) + hitRadius, targetMaxRadius - hitRadius);
     
     // Check if the coordinates are inside the target (circle)
-    insideTarget = sqrt(pow(hitX-targetX, 2) + pow(hitY-targetY, 2)) < targetMaxRadius; 
+    distanceToCenter = sqrt(pow(hitX-targetX, 2) + pow(hitY-targetY, 2));
+    insideTarget = distanceToCenter < targetMaxRadius; 
   }
   
   // Add coordinates to array and add one to counter
@@ -89,6 +98,10 @@ void shoot() {
   // Show fire animation
   fireTiming = millis();
   showFire = true;
+  
+  // Points
+  score += points[floor(distanceToCenter / 50)];
+  
 }
 
 
