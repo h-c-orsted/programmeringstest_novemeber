@@ -45,7 +45,11 @@ void draw() {
   
   // Insert image of gun
   imageMode(CENTER);
-  image(gun, 155, 400, 310, 200); 
+  if (showFire) {
+    image(gun, 170 - (150 - (millis()-fireTiming)), 400, 310, 200);
+  } else {
+    image(gun, 170, 400, 310, 200);
+  }
   
   // Draw target
   for (int i=0; i<5; i++) {
@@ -59,7 +63,7 @@ void draw() {
   // Show fire image
   if (showFire) {
     imageMode(CORNER);
-    image(gunfire, 285, 235, 300, 200);
+    image(gunfire, 300, 235, 300, 200);
     
     if (millis() - fireTiming > 150) {showFire=false;}
   }
